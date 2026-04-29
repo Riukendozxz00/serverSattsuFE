@@ -21,17 +21,19 @@ function groupByApp(records) {
   const groups = new Map();
 
   for (const record of records) {
-    if (!groups.has(record.appId)) {
-      groups.set(record.appId, []);
+    const appId = record.appId ?? record.appName ?? 'unknown';
+
+    if (!groups.has(appId)) {
+      groups.set(appId, []);
     }
-    groups.get(record.appId).push(record);
+    groups.get(appId).push(record);
   }
 
   return Array.from(groups.entries())
     .sort(([left], [right]) => left - right)
     .map(([appId, checks]) => ({
       appId,
-      name: `App ${appId}`,
+      name: checks.find((check) => check.appName)?.appName || `App ${appId}`,
       checks: checks.sort((a, b) => parseDate(a.fecha) - parseDate(b.fecha)),
     }));
 }
@@ -179,6 +181,18 @@ function App() {
         <span className="calendar-icon" aria-hidden="true" />
         View history
       </button>
+
+      <footer className="powered-footer">
+        <div className="powered-brand">
+          <span>Powered by</span>
+          <span className="powered-logo" aria-label="Digital Strategy" />
+        </div>
+        <p className="availability-note">
+          Availability metrics are reported at an aggregate level across all tiers, models and error types. Individual
+          customer availability may vary depending on their subscription tier as well as the specific model and API
+          features in use.
+        </p>
+      </footer>
     </main>
   );
 }
