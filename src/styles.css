@@ -20,18 +20,15 @@ html,
 body {
   margin: 0;
   min-width: 320px;
-  height: 100vh;
-  overflow: hidden;
-}
-
-button {
-  font: inherit;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .page-shell {
   width: min(670px, calc(100% - 32px));
-  height: 100%;
-  margin: 18px auto 0;
+  min-height: 100%;
+  margin: 18px auto 24px;
 }
 
 .topbar {
@@ -48,18 +45,6 @@ button {
   line-height: 1.15;
   font-weight: 750;
   letter-spacing: 0;
-}
-
-.subscribe-button {
-  min-height: 34px;
-  padding: 0 13px;
-  border: 0;
-  border-radius: 6px;
-  color: #ffffff;
-  background: #23242d;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
 }
 
 .hero-status {
@@ -129,7 +114,7 @@ button {
 }
 
 .status-panel {
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #e2e5ea;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(15, 17, 23, 0.06);
@@ -225,9 +210,12 @@ button {
 }
 
 .bar {
+  position: relative;
+  display: block;
   min-width: 3px;
   height: 16px;
   border-radius: 1px;
+  outline: 0;
 }
 
 .bar-ok {
@@ -236,6 +224,43 @@ button {
 
 .bar-down {
   background: #ffbd29;
+}
+
+.bar-tooltip {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  z-index: 10;
+  width: max-content;
+  max-width: 240px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #23242d;
+  color: #ffffff;
+  font-size: 12px;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
+
+.bar-tooltip::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  border: 5px solid transparent;
+  border-top-color: #23242d;
+  transform: translateX(-50%);
+}
+
+.bar:hover .bar-tooltip,
+.bar:focus .bar-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 .empty-state {
@@ -248,53 +273,8 @@ button {
   color: #a0352a;
 }
 
-.history-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  min-height: 38px;
-  margin: 20px auto 0;
-  padding: 0 15px;
-  border: 1px solid #cfd4dc;
-  border-radius: 7px;
-  background: #ffffff;
-  color: #0f1117;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.calendar-icon {
-  position: relative;
-  width: 15px;
-  height: 15px;
-  border: 2px solid #171922;
-  border-radius: 2px;
-}
-
-.calendar-icon::before {
-  content: "";
-  position: absolute;
-  left: -2px;
-  right: -2px;
-  top: 3px;
-  border-top: 2px solid #171922;
-}
-
-.calendar-icon::after {
-  content: "";
-  position: absolute;
-  left: 2px;
-  right: 2px;
-  top: -5px;
-  height: 4px;
-  border-left: 2px solid #171922;
-  border-right: 2px solid #171922;
-}
-
 .powered-footer {
-  margin: 32px auto 0;
+  margin: 44px auto 0;
   text-align: center;
 }
 
@@ -342,12 +322,6 @@ button {
 
   .topbar h1 {
     font-size: 24px;
-  }
-
-  .subscribe-button {
-    max-width: 150px;
-    min-height: 36px;
-    white-space: normal;
   }
 
   .panel-header,

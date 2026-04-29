@@ -17,6 +17,25 @@ function parseDate(value) {
   return new Date(value.replace(' ', 'T'));
 }
 
+function formatCheckTooltip(check) {
+  if (!check.fecha) {
+    return 'Sin datos';
+  }
+
+  const date = parseDate(check.fecha);
+  const formattedDate = new Intl.DateTimeFormat('es-MX', {
+    weekday: 'long',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(date);
+
+  return `${formattedDate} - ${check.status ? 'Disponible' : 'No disponible'}`;
+}
+
 function groupByApp(records) {
   const groups = new Map();
 
@@ -78,8 +97,11 @@ function AppRow({ app }) {
           <span
             key={`${check.fecha}-${index}`}
             className={`bar ${check.status ? 'bar-ok' : 'bar-down'}`}
-            title={check.fecha ? `${check.fecha} - ${check.status ? 'Disponible' : 'No disponible'}` : 'Sin datos'}
-          />
+            tabIndex={0}
+            aria-label={formatCheckTooltip(check)}
+          >
+            <span className="bar-tooltip">{formatCheckTooltip(check)}</span>
+          </span>
         ))}
       </div>
     </section>
@@ -134,8 +156,7 @@ function App() {
   return (
     <main className="page-shell">
       <header className="topbar">
-        <h1>Sattsu Status</h1>
-        <button className="subscribe-button" type="button">Subscribe to updates</button>
+        <h1>Radial Status</h1>
       </header>
 
       <section className={`hero-status ${fullyOperational ? 'hero-ok' : 'hero-alert'}`}>
@@ -176,11 +197,6 @@ function App() {
 
         {!loading && !error && apps.map((app) => <AppRow key={app.appId} app={app} />)}
       </section>
-
-      <button className="history-button" type="button">
-        <span className="calendar-icon" aria-hidden="true" />
-        View history
-      </button>
 
       <footer className="powered-footer">
         <div className="powered-brand">
